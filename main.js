@@ -3,6 +3,8 @@
 const electron = require('electron');
 // Module to control application life.
 const app = electron.app;
+const Menu = electron.Menu;
+const Tray = electron.Tray;
 // Module to create native browser window.
 const BrowserWindow = electron.BrowserWindow;
 
@@ -12,13 +14,26 @@ let mainWindow;
 
 function createWindow () {
   // Create the browser window.
-  mainWindow = new BrowserWindow({width: 800, height: 600});
+  mainWindow = new BrowserWindow({
+		width: 800,
+		height: 600,
+		icon: __dirname + '/app/images/dock-icon.png'
+	});
+
+	var appIcon = null;
+
+	appIcon = new Tray(__dirname + '/app/images/tray-icon.png');
+	var contextMenu = Menu.buildFromTemplate([
+		{ label: 'Item1', type: 'radio' },
+		{ label: 'Item2', type: 'radio' },
+		{ label: 'Item3', type: 'radio', checked: true },
+		{ label: 'Item4', type: 'radio' }
+	]);
+	appIcon.setToolTip('This is my application.');
+	appIcon.setContextMenu(contextMenu);
 
   // and load the index.html of the app.
-  mainWindow.loadURL('file://' + __dirname + '/index.html');
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.loadURL('file://' + __dirname + '/app/index.html');
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function() {
